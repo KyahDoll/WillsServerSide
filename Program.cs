@@ -1,6 +1,5 @@
-﻿using System;
-using System.Net.Http;
-using System.Threading.Tasks;
+﻿using API;
+using Newtonsoft.Json;
 
 class Program
 {
@@ -8,15 +7,26 @@ class Program
     {
         using var httpClient = new HttpClient();
         string apiUrl = "https://swapi.dev/api/people/";
+        var dict = new Dictionary<string, string>();
 
         try
         {
             HttpResponseMessage response = await httpClient.GetAsync(apiUrl);
-
             if (response.IsSuccessStatusCode)
             {
                 string content = await response.Content.ReadAsStringAsync();
-                Console.WriteLine(content);
+                var per = JsonConvert.DeserializeObject<People>(content);
+
+                foreach (Person item in per.Results)
+                {
+                    HttpResponseMessage respo = await httpClient.GetAsync(apiUrl);
+                    string home = await response.Content.ReadAsStringAsync();
+                    var plan = JsonConvert.DeserializeObject<Planet>(home);
+
+                    dict.Add(person.name, Planet.name);
+                }
+                
+                //----------------------------------------------------------------------------------------
             }
             else
             {
